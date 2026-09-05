@@ -3,10 +3,9 @@
 #include <gmock/gmock.h>
 
 // Local Includes
-//#include <collections/vector.hpp>
-#include <vector> // temporary
+#include <collections/circular_vector.hpp>
 
-namespace collections::vector_testing {
+namespace collections::circular_vector_testing {
     // ── Constructor Tests ───────────────────────────────────────────────────
     namespace constructor_testing {
         // ── Default Constructor Tests ───────────────────────────────────────
@@ -428,4 +427,4 @@ namespace collections::vector_testing {
     namespace deduction_guide_testing {
 
     } // namespace deduction_guide_testing
-} // namespace collections::vector_testing
+} // namespace collections::circular_vector_testing
