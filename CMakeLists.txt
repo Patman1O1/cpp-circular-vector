@@ -1,6 +1,6 @@
 # ── Information ──────────────────────────────────────────────────────────────
 cmake_minimum_required(VERSION 4.3.0)
-project("cpp_circular_vector"
+project("circular_vector"
         VERSION 0.1.0
         DESCRIPTION ""
         LANGUAGES CXX
@@ -68,50 +68,50 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Target: cpp_circular_vector_headers
-# Alias: collections::cpp_circular_vector_headers
+# Target: circular_vector_headers
+# Alias: collections::circular_vector_headers
 # Type: Interface Library
 # ───────────────────────────────────────────────────────────────────────────── 
 # Target definition
-add_library(cpp_circular_vector_headers INTERFACE)
+add_library(circular_vector_headers INTERFACE)
 
 # Target alias
-add_library(collections::cpp_circular_vector_headers 
+add_library(collections::circular_vector_headers 
     ALIAS
-        cpp_circular_vector_headers
+        circular_vector_headers
 )
 
 # Target headers
-target_include_directories(cpp_circular_vector_headers
+target_include_directories(circular_vector_headers
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Target: cpp_circular_vector
-# Alias: collections::cpp_circular_vector
+# Target: circular_vector
+# Alias: collections::circular_vector
 # Type: Interface Library
-# Dependencies: collections::cpp_circular_vector_headers
+# Dependencies: collections::circular_vector_headers
 # ─────────────────────────────────────────────────────────────────────────────
 # Target definition
-add_library(cpp_circular_vector INTERFACE)
+add_library(circular_vector INTERFACE)
 
 # Target alias
-add_library(collections::cpp_circular_vector
+add_library(collections::circular_vector
     ALIAS
-        cpp_circular_vector
+        circular_vector
 )
 
 # Target dependencies
-target_link_libraries(cpp_circular_vector
+target_link_libraries(circular_vector
     INTERFACE
-        collections::cpp_circular_vector_headers
+        collections::circular_vector_headers
 )
 
 # Target properties
-set_target_properties(cpp_circular_vector PROPERTIES
-        OUTPUT_NAME cpp_circular_vector
+set_target_properties(circular_vector PROPERTIES
+        OUTPUT_NAME circular_vector
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
         CXX_VISIBILITY_PRESET hidden
@@ -119,12 +119,12 @@ set_target_properties(cpp_circular_vector PROPERTIES
 )
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-    # Install cpp_circular_vector
-    install(TARGETS cpp_circular_vector
-            RUNTIME COMPONENT cpp_circular_vector
-            LIBRARY COMPONENT cpp_circular_vector
-            NAMELINK_COMPONENT cpp_circular_vector
-            ARCHIVE COMPONENT cpp_circular_vector
+    # Install circular_vector
+    install(TARGETS circular_vector
+            RUNTIME COMPONENT circular_vector
+            LIBRARY COMPONENT circular_vector
+            NAMELINK_COMPONENT circular_vector
+            ARCHIVE COMPONENT circular_vector
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
