@@ -5,7 +5,7 @@
 #include <iostream>
 
 // Local Includes
-#include <collections/cpp_circular_vector.hpp>
+#include <collections/circular_vector.hpp>
 
 auto main() -> int {
     std::println(std::cout, "Hello world!");
