@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Target: test_package
 # Type: Executable
-# Dependencies: collections::cpp_circular_vector
+# Dependencies: collections::circular_vector
 # ─────────────────────────────────────────────────────────────────────────────
 # Target definition
 add_executable(test_package)
@@ -15,5 +15,5 @@ target_sources(test_package
 # Target dependencies
 target_link_libraries(test_package
     PRIVATE
-        collections::cpp_circular_vector
+        collections::circular_vector
 )
