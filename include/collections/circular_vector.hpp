@@ -1,5 +1,5 @@
-#ifndef COLLECTIONS_ARRAY_HPP
-#define COLLECTIONS_ARRAY_HPP
+#ifndef COLLECTIONS_CIRCULAR_VECTOR_HPP
+#define COLLECTIONS_CIRCULAR_VECTOR_HPP
 
 // ISO C Includes
 #include <cstddef>
@@ -20,7 +20,7 @@
 
 namespace collections {
     template<typename T, typename Alloc = std::allocator<T>>
-    class vector {
+    class circular_vector {
     public:
         // ── Aliases ─────────────────────────────────────────────────────────
         using value_type = T;
@@ -212,17 +212,17 @@ namespace collections {
     public:
         // ── Constructors ────────────────────────────────────────────────────
         // TODO: Need to test
-        constexpr vector() noexcept(
+        constexpr circular_vector() noexcept(
             noexcept(allocator_type())
         ) : vals_(nullptr), sz_(0), cap_(DEFAULT_CAP) {}
 
         // TODO: Need to test
-        explicit constexpr vector(
+        explicit constexpr circular_vector(
             const allocator_type& alloc
         ) : vals_(nullptr), sz_(0), cap_(DEFAULT_CAP), alloc_(alloc) {}
 
         // TODO: Need to test
-        explicit constexpr vector(
+        explicit constexpr circular_vector(
             const size_type count,
             const allocator_type& alloc = allocator_type()
         ) : alloc_(alloc), sz_(count) {
@@ -240,7 +240,7 @@ namespace collections {
         }
 
         // TODO: Need to test
-        constexpr vector(
+        constexpr circular_vector(
             const size_type count,
             const_reference value,
             const allocator_type& alloc = allocator_type()
@@ -260,7 +260,7 @@ namespace collections {
 
         // TODO: Need to test
         template<std::input_iterator InputIt>
-        constexpr vector(
+        constexpr circular_vector(
             InputIt first,
             InputIt last,
             const allocator_type& alloc
@@ -275,7 +275,7 @@ namespace collections {
         // TODO: Need to test
         template<std::ranges::input_range R> requires(
             std::convertible_to<std::ranges::range_reference_t<R>, value_type>
-        ) constexpr vector(
+        ) constexpr circular_vector(
             std::from_range_t,
             R&& rg,
             const allocator_type& alloc = allocator_type()
@@ -311,8 +311,8 @@ namespace collections {
         }
 
         // TODO: Need to test
-        constexpr vector(
-            const vector& other
+        constexpr circular_vector(
+            const circular_vector& other
         ) : cap_(other.cap_), sz_(other.sz_) {
             this->_alloc();
             this->_construct(
@@ -322,16 +322,16 @@ namespace collections {
         }
 
         // TODO: Need to test
-        constexpr vector(
-            vector&& other
+        constexpr circular_vector(
+            circular_vector&& other
         ) noexcept : cap_(other.cap_), sz_(other.sz_), vals_(other.vals_) {
             other.vals_ = nullptr;
             other.sz_ = 0;
         }
 
         // TODO: Need to test
-        constexpr vector(
-            const vector& other,
+        constexpr circular_vector(
+            const circular_vector& other,
             const std::type_identity_t<allocator_type>& alloc
         ) : alloc_(alloc), cap_(other.cap_), sz_(other.sz_) {
             this->_alloc();
@@ -342,8 +342,8 @@ namespace collections {
         }
 
          // TODO: Need to test
-        constexpr vector(
-            vector&& other,
+        constexpr circular_vector(
+            circular_vector&& other,
             const std::type_identity_t<allocator_type>& alloc
         ) noexcept : alloc_(alloc),
                      cap_(other.cap_),
@@ -354,7 +354,7 @@ namespace collections {
         }
 
         // TODO: Need to test
-        constexpr vector(
+        constexpr circular_vector(
             std::initializer_list<value_type> values,
             const allocator_type& alloc = allocator_type()
         ) : alloc_(alloc), sz_(std::distance(values.begin(), values.end())) {
@@ -368,7 +368,7 @@ namespace collections {
 
         // ── Destructor ──────────────────────────────────────────────────────
         // TODO: Need to test
-        constexpr ~vector() noexcept {
+        constexpr ~circular_vector() noexcept {
             if (this->vals_ == nullptr) [[unlikely]] {
                 return;
             }
@@ -379,7 +379,9 @@ namespace collections {
 
         // ── Overloaded Operators ────────────────────────────────────────────
         // TODO: Need to test
-        constexpr auto operator=(const vector& rhs) -> vector& {
+        constexpr auto operator=(
+            const circular_vector& rhs
+        ) -> circular_vector& {
             // Protect against self-assignment
             if (this == &rhs) [[unlikely]] {
                 return *this;
@@ -398,7 +400,9 @@ namespace collections {
         }
 
         // TODO: Need to test
-        constexpr auto operator=(vector&& rhs) noexcept -> vector& {
+        constexpr auto operator=(
+            circular_vector&& rhs
+        ) noexcept -> circular_vector& {
             if (this == &rhs) [[unlikely]] {
                 return *this;
             }
@@ -422,7 +426,7 @@ namespace collections {
         // TODO: Need to test
         constexpr auto operator=(
             std::initializer_list<value_type> values
-        ) -> vector& {
+        ) -> circular_vector& {
             if (this->sz_ > 0) [[likely]] {
                 this->_destroy();
                 this->_dealloc();
@@ -437,7 +441,7 @@ namespace collections {
 
         // TODO: Need to test
         [[nodiscard]]
-        constexpr auto operator==(const vector& rhs) const noexcept(
+        constexpr auto operator==(const circular_vector& rhs) const noexcept(
             noexcept(std::declval<value_type>() == std::declval<value_type>())
         ) -> bool {
             return std::equal(this->begin(), this->end(), rhs.begin());
@@ -445,7 +449,7 @@ namespace collections {
 
         // TODO: Need to test
         [[nodiscard]]
-        constexpr auto operator<=>(const vector& rhs) const noexcept(
+        constexpr auto operator<=>(const circular_vector& rhs) const noexcept(
             noexcept(std::declval<value_type>() <=> std::declval<value_type>())
         ) -> std::compare_three_way_result_t<value_type> {
             return std::lexicographical_compare_three_way(
@@ -503,7 +507,7 @@ namespace collections {
         constexpr auto at(const size_type index) -> reference {
             if (index >= this->sz_) [[unlikely]] {
                 throw std::out_of_range(
-                    "collections::vector::at index out of range"
+                    "collections::circular_vector::at index out of range"
                 );
             }
             return this->vals_[index];
@@ -514,7 +518,7 @@ namespace collections {
         constexpr auto at(const size_type index) const -> const_reference {
             if (index >= this->sz_) [[unlikely]] {
                 throw std::out_of_range(
-                    "collections::vector::at index out of range"
+                    "collections::circular_vector::at index out of range"
                 );
             }
             return this->vals_[index];
@@ -898,7 +902,7 @@ namespace collections {
             typename std::iterator_traits<InputIt>::value_type
         >
     >
-    vector(InputIt, InputIt, Alloc = Alloc()) -> vector<
+    circular_vector(InputIt, InputIt, Alloc = Alloc()) -> circular_vector<
         typename std::iterator_traits<InputIt>::value_type,
         Alloc
     >;
@@ -907,7 +911,10 @@ namespace collections {
         std::ranges::input_range R,
         typename Alloc = std::allocator<std::ranges::range_value_t<R>>
     >
-    vector(std::from_range_t, R&&, Alloc = Alloc()) -> vector<
+    circular_vector(
+        std::from_range_t,
+        R&&, Alloc = Alloc()
+    ) -> circular_vector<
         std::ranges::range_value_t<R>,
         Alloc
     >;
@@ -916,16 +923,16 @@ namespace collections {
     // TODO: Need to implement
     template<typename T, typename Alloc>
     constexpr void swap(
-        vector<T, Alloc>& lhs,
-        vector<T, Alloc>& rhs
+        circular_vector<T, Alloc>& lhs,
+        circular_vector<T, Alloc>& rhs
     ) noexcept {
         throw std::runtime_error("Not implemented");
     }
 
     // TODO: Need to implement
     template<typename T, typename Alloc, typename U = T>
-    constexpr vector<T, Alloc>::size_type erase(
-        vector<T, Alloc>& vec,
+    constexpr circular_vector<T, Alloc>::size_type erase(
+        circular_vector<T, Alloc>& vec,
         const U& value
     ) {
         throw std::runtime_error("Not implemented");
@@ -933,11 +940,11 @@ namespace collections {
 
     // TODO: Need to implement
     template<typename T, typename Alloc, std::predicate Pred>
-    constexpr vector<T, Alloc>::size_type erase_if(
-        vector<T, Alloc>& vec,
+    constexpr circular_vector<T, Alloc>::size_type erase_if(
+        circular_vector<T, Alloc>& vec,
         const Pred pred
     ) {
         throw std::runtime_error("Not implemented");
     }
 } // namespace collections
-#endif // #ifndef VECTOR_HPP
+#endif // #ifndef COLLECTIONS_CIRCULAR_VECTOR_HPP
